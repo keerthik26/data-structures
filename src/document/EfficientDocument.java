@@ -54,6 +54,18 @@ public class EfficientDocument extends Document {
 		
 		// TODO: Finish this method.  Remember the countSyllables method from 
 		// Document.  That will come in handy here.  isWord defined above will also help.
+		
+		for (String token : tokens){
+			if(isWord(token)){
+				numWords++;
+				numSyllables += countSyllables(token);
+			}else{
+				numSentences++;
+			}
+		}
+		if(getText().length()>0 && !(getText().endsWith(".") || getText().endsWith("!") || getText().endsWith("?"))){
+			numSentences++;
+		}
 	}
 
 	
@@ -73,13 +85,14 @@ public class EfficientDocument extends Document {
 	@Override
 	public int getNumSentences() {
 		//TODO: write this method.  Hint: It's simple
-		return 0;
+		return numSentences;
 	}
 
 	
 	/**
 	 * Get the number of words in the document.
-	 * A "word" is defined as a contiguous string of alphabetic characters
+	 * A
+	 *  "word" is defined as a contiguous string of alphabetic characters
 	 * i.e. any upper or lower case characters a-z or A-Z.  This method completely 
 	 * ignores numbers when you count words, and assumes that the document does not have 
 	 * any strings that combine numbers and letters. 
@@ -94,7 +107,7 @@ public class EfficientDocument extends Document {
 	@Override
 	public int getNumWords() {
 		//TODO: write this method.  Hint: It's simple
-	    return 0;
+	    return numWords;
 	}
 
 
@@ -116,7 +129,7 @@ public class EfficientDocument extends Document {
 	@Override
 	public int getNumSyllables() {
         //TODO: write this method.  Hint: It's simple
-        return 0;
+        return numSyllables;
 	}
 	
 	// Can be used for testing

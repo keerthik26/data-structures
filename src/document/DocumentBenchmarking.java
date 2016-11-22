@@ -58,7 +58,23 @@ public class DocumentBenchmarking {
 			 * 6. Print out the time it took to complete the loop in step 5 
 			 *      (on the same line as the first print statement) followed by a newline (\n) 
 			 */  
+			System.out.print(numToCheck +"\t");
+			String textRead = getStringFromFile(textfile, numToCheck);
+			long startTimeMillis = System.currentTimeMillis();
+			for(int i=0 ; i<trials;i++){
+				new BasicDocument(textRead).getFleschScore();
+			}
+			long endTimeMillis = System.currentTimeMillis();
+			
+			System.out.print(endTimeMillis-startTimeMillis+"\t");
+			
+			 startTimeMillis = System.currentTimeMillis();
+			for(int i=0 ; i<trials;i++){
+				new EfficientDocument(textRead).getFleschScore();
+			}
+			 endTimeMillis = System.currentTimeMillis();
 			 
+			 System.out.print(endTimeMillis-startTimeMillis+"\n");
 		}
 	
 	}
