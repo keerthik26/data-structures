@@ -17,6 +17,10 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	/** Create a new empty LinkedList */
 	public MyLinkedList() {
 		// TODO: Implement this method
+		head = new LLNode<E>(null);
+		tail = new LLNode<E>(null);
+		head.next = tail;
+		tail.prev = head;
 	}
 
 	/**
@@ -26,15 +30,36 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	public boolean add(E element ) 
 	{
 		// TODO: Implement this method
-		return false;
+		if(element != null){
+		LLNode<E> node = new LLNode<E>(element);
+		LLNode<E> parent = tail.prev;
+		node.prev = parent;
+		node.next = tail;
+		parent.next = node;
+		tail.prev = node;
+		size++;
+		return true;
+		}else{
+			throw new NullPointerException();
+		}
 	}
 
 	/** Get the element at position index 
 	 * @throws IndexOutOfBoundsException if the index is out of bounds. */
-	public E get(int index) 
+	public E get(int index) throws IndexOutOfBoundsException
 	{
 		// TODO: Implement this method.
-		return null;
+		
+		
+		if(index < 0 || index >= size ){
+			throw new IndexOutOfBoundsException();//"Index is out of limits"
+		}else{
+			LLNode<E> currentNode = head.next;
+			for(int i=0;i<index; i++){
+				currentNode = currentNode.next;
+			}
+			return currentNode.data;
+		}
 	}
 
 	/**
@@ -45,6 +70,39 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	public void add(int index, E element ) 
 	{
 		// TODO: Implement this method
+		if(index < 0 || index > size ){
+			throw new IndexOutOfBoundsException();//"Index is out of limits"
+		}else if(element == null){
+			throw new NullPointerException();
+		}else{
+			LLNode<E> node = new LLNode<E>(element);	
+			if(head.next == tail){
+				head.next = node;
+				node.prev = head;
+				node.next=tail;
+				tail.prev=node;
+			}else if(index == size){
+				LLNode<E> prevNode = tail.prev;
+				prevNode.next = node;
+				node.prev = prevNode;
+				node.next = tail;
+				tail.prev = node;
+			}else{
+			LLNode<E> currentNode = head;
+			for(int i=0;i<=index; i++){
+				currentNode = currentNode.next;
+			}					
+			LLNode<E> prevNode = currentNode.prev;
+			//LLNode<E> nextNode = currentNode.next;
+			prevNode.next = node;
+			currentNode.prev = node;
+			node.prev = prevNode;
+			node.next = currentNode;
+			}
+			size++;
+			
+		}
+		
 	}
 
 
@@ -52,7 +110,7 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	public int size() 
 	{
 		// TODO: Implement this method
-		return -1;
+		return size;
 	}
 
 	/** Remove a node at the specified index and return its data element.
@@ -64,7 +122,21 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	public E remove(int index) 
 	{
 		// TODO: Implement this method
-		return null;
+		if(index < 0 || index >= size ){
+			throw new IndexOutOfBoundsException();//"Index is out of limits"
+		}else{
+			LLNode<E> currentNode = head.next;
+			for(int i=0;i<index; i++){
+				currentNode = currentNode.next;
+			}
+			LLNode<E> prevNode = currentNode.prev;
+			LLNode<E> nextNode = currentNode.next;
+			prevNode.next = nextNode;
+			nextNode.prev = prevNode;
+			size--;
+			return currentNode.data;
+		}
+		
 	}
 
 	/**
@@ -77,8 +149,32 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	public E set(int index, E element) 
 	{
 		// TODO: Implement this method
-		return null;
-	}   
+		if(index < 0 || index >= size ){
+			throw new IndexOutOfBoundsException();//"Index is out of limits"
+		}else if(element == null){
+			throw new NullPointerException();
+		}else{
+			LLNode<E> currentNode = head.next;
+			for(int i=0;i<index; i++){
+				currentNode = currentNode.next;
+			}
+			E data = currentNode.data;
+			currentNode.data = element;
+			return data;
+		}
+		
+	}
+	
+	public String toString() {
+		String str = "";
+		for(int i=0;i<size;i++){
+			str += this.get(i) +" --> ";
+		}
+		
+		//System.out.println(str);
+		return str;
+		
+	}
 }
 
 class LLNode<E> 
@@ -95,6 +191,15 @@ class LLNode<E>
 		this.data = e;
 		this.prev = null;
 		this.next = null;
+	}
+	
+	public LLNode(E e, LLNode<E> before, LLNode<E> after) 
+	{
+		this.data = e;
+		this.prev = before;
+		this.next = after;
+		before.next = this;
+		next.prev = this;
 	}
 
 }
