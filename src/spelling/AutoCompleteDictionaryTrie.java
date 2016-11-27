@@ -40,6 +40,28 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	public boolean addWord(String word)
 	{
 	    //TODO: Implement this method.
+		if(!word.equals(null)){
+        	String lowerCaseWord = word.toLowerCase();
+        	
+        	TrieNode next=root;
+        	TrieNode curr;
+        	for(char c : lowerCaseWord.toCharArray()){
+        		curr=next;
+        		if(next != null){
+        		next= curr.insert(c);
+        		if(next == null){
+        			next= curr.getChild(c);
+        		}
+        		}	       			
+        	}
+        	if(next.endsWord()==false){
+        	next.setEndsWord(true);
+        	//System.out.println(next.getText());
+        	size++;
+        	}
+        	return true;
+        	
+    	}
 	    return false;
 	}
 	
@@ -50,7 +72,7 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	public int size()
 	{
 	    //TODO: Implement this method
-	    return 0;
+	    return size;
 	}
 	
 	
@@ -60,6 +82,20 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	public boolean isWord(String s) 
 	{
 	    // TODO: Implement this method
+		String lowerS=s.toLowerCase();
+		TrieNode curr = root;
+		//System.out.println(curr == null);
+		for(char c : lowerS.toCharArray()){
+			if(curr != null){
+			curr=curr.getChild(c);
+			if(curr == null){
+				break;
+			}
+			}
+			}
+		if(curr != null && curr.endsWord() == true ){
+			return true;
+		}
 		return false;
 	}
 
@@ -100,8 +136,34 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
     	 //       If it is a word, add it to the completions list
     	 //       Add all of its child nodes to the back of the queue
     	 // Return the list of completions
-    	 
-         return null;
+    	
+    	 TrieNode curr = root;
+    	 TrieNode firstNode;
+    	 LinkedList<TrieNode> queue = new LinkedList<>();
+    	 LinkedList<String> completions = new LinkedList<>();
+    	 System.out.println(completions.size());
+    	 if(!prefix.equals(null) ){
+    	 String lower = prefix.toLowerCase();
+    	 for(char c : lower.toCharArray()){
+    		 if(curr != null){
+    		 curr = curr.getChild(c);
+    		 }else break;
+    	 }
+    	 if(curr != null){
+    		 queue.addLast(curr);
+    		 while(!queue.isEmpty()){
+    			 firstNode=queue.removeFirst();
+    			 if(firstNode.endsWord()){
+    				 completions.addLast(firstNode.getText());
+    			 }
+    			 for(char key : firstNode.getValidNextCharacters())
+    			 queue.addLast(firstNode.getChild(key));
+    		 }
+    		 if(completions.size() >= numCompletions)
+    			 return completions.subList(0, numCompletions);
+    	 }
+    	 }
+         return completions;
      }
 
  	// For debugging
